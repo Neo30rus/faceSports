@@ -20,7 +20,7 @@
             </div>
             <div class="cabinet_content">
                 <dib class="page-content-inner">
-                    <h2>Удаление новости</h2>
+                    <h2>Удаление пользователя</h2>
                     <form method="post" name="news_delete_form">
                         <div class="news_add_form">
                             <div class="alert alert-danger <?= !empty($error_message) ? null : 'hidden' ?>">

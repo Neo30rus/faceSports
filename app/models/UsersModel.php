@@ -119,4 +119,78 @@ class UsersModel extends BaseModel
         }
         return $result;
     }
+
+    public function getUserByID($id)
+    {
+        $result = null;
+
+        $users = $this->select('select id, username, login, is_admin from users where id = :id', [
+            'id' => $id
+        ]);
+        if (!empty($users)) {
+            $result = $users[0];
+        }
+        return $result;
+    }
+
+    public function edit($user_id, $user_data)
+    {
+        $result = false;
+        $error_message = '';
+        if (empty($user_id)) {
+            $error_message .= "Отсутствует идентификатор записи!<br>";
+        }
+        if (empty($user_data['username'])) {
+            $error_message .= "Введите имя!<br>";
+        }
+        if (empty($user_data['login'])) {
+            $error_message .= "Введите логин!<br>";
+        }
+        if (isset($user_data['is_admin'])) {
+            $user_data['is_admin'] = 1;
+        } else {
+            $user_data['is_admin'] = 0;
+        }
+
+
+        if (empty($error_message)) {
+            $result = $this->update(
+                "UPDATE users SET username = :username, login = :login,
+                        is_admin = :is_admin where id = :id",
+                [
+                    'username' => $user_data['username'],
+                    'login' => $user_data['login'],
+                    'is_admin' => $user_data['is_admin'],
+                    'id' => $user_id,
+                ]
+            );
+        }
+
+        return [
+            'result' => $result,
+            'error_message' => $error_message
+        ];
+    }
+    public function deleteById($user_id)
+    {
+        $result = false;
+        $error_message = '';
+
+        if (empty($user_id)) {
+            $error_message .= "Отсутствует идентификатор записи!<br>";
+        }
+
+        if (empty($error_message)) {
+            $result = $this->update("DELETE FROM users WHERE id = :id",
+                [
+                    'id' => $user_id,
+                ]
+            );
+        }
+
+        return [
+            'result' => $result,
+            'error_message' => $error_message
+        ];
+    }
 }

@@ -19,7 +19,7 @@
             </div>
             <div class="cabinet_content">
                 <dib class="page-content-inner">
-                    <h2>Добавление новости</h2>
+                    <h2>Добавление товара</h2>
                     <form method="post" name="news_add_form">
                         <div class="news_add_form">
                             <div class="alert alert-danger <?= !empty($error_message) ? null : 'hidden' ?>">
@@ -66,7 +66,20 @@
                                         : ''
                                     ?></textarea>
                             </div>
-
+                            <div class="input_box">
+                                <label for="field_price">Цена</label>
+                                <input type="number"
+                                       name="news[price]"
+                                       id="field_price"
+                                       class="form-control"
+                                       maxlength="120"
+                                       value="<?= !empty($_POST['news']['price'])
+                                           ? $_POST['news']['price']
+                                           : ''
+                                       ?>"
+                                       placeholder="Введите цену"
+                                >
+                            </div>
                             <div class="button_box">
                                 <button type="submit"
                                         name="btn_news_add_form"

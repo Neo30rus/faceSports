@@ -20,16 +20,20 @@ class NewsModels extends BaseModel
         if (empty($news_data['description'])) {
             $error_message .= "Введите описание!<br>";
         }
+        if (empty($news_data['price'])) {
+            $error_message .= "Введите цену!<br>";
+        }
 
         if (empty($error_message)) {
             $result = $this->insert(
-                "INSERT INTO news (title, short_description, description, date_create, user_id)
-                        VALUES (:title, :short_description, :description, NOW(), :user_id)",
+                "INSERT INTO product (title, short_description, description, date_create, user_id,price)
+                        VALUES (:title, :short_description, :description, NOW(), :user_id, :price)",
                 [
                     'title' => $news_data['title'],
                     'short_description' => $news_data['short_description'],
                     'description' => $news_data['description'],
                     'user_id' => $_SESSION['user']['id'],
+                    "price"=>$news_data['price'],
                 ]
             );
         }
@@ -57,16 +61,19 @@ class NewsModels extends BaseModel
         if (empty($news_data['description'])) {
             $error_message .= "Введите описание!<br>";
         }
+        if (empty($news_data['price'])) {
+            $error_message .= "Введите цену!<br>";
+        }
 
         if (empty($error_message)) {
             $result = $this->update(
-                "UPDATE news SET title = :title, short_description = :short_description,
-                        description = :description where id = :id",
+                "UPDATE product SET title = :title, short_description = :short_description,
+                        description = :description, price = :price where id = :id",
                 [
                     'title' => $news_data['title'],
                     'short_description' => $news_data['short_description'],
                     'description' => $news_data['description'],
-                    'id' => $news_id,
+                    'id' => $news_id, 'price' =>$news_data['price'],
                 ]
             );
         }
@@ -87,7 +94,7 @@ class NewsModels extends BaseModel
         }
 
         if (empty($error_message)) {
-            $result = $this->update("DELETE FROM news WHERE id = :id",
+            $result = $this->update("DELETE FROM product WHERE id = :id",
                 [
                     'id' => $news_id,
                 ]
@@ -104,7 +111,7 @@ class NewsModels extends BaseModel
     {
         $result = null;
 
-        $news = $this->select('select * from news');
+        $news = $this->select('select * from product');
         if (!empty($news)) {
             $result = $news;
         }
@@ -115,7 +122,7 @@ class NewsModels extends BaseModel
     {
         $result = null;
 
-        $news = $this->select('select * from news where id = :id', [
+        $news = $this->select('select * from product where id = :id', [
             'id' => $news_id
         ]);
         if (!empty($news[0])) {

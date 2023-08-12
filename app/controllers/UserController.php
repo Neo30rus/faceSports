@@ -151,6 +151,72 @@ class UserController extends InitController
             'role' => UserOperations::getRoleUser(),
         ]);
     }
+    public function actionEdit(){
+        $this->view->title = 'Редактирование пользователя';
+        $user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : null;
+        $user = null;
+        $error_message = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['btn_user_edit_form'])) {
+            $user_data = !empty($_POST['user']) ? $_POST['user'] : null;
+            if (!empty($user_data)) {
+                $newsModel = new UsersModel();
+                $result_edit = $newsModel->edit($user_id, $user_data);
+
+                if ($result_edit['result']) {
+                    $this->redirect('/user/users');
+                } else {
+                    $error_message = $result_edit['error_message'];
+                }
+            }
+        }
+
+        if (!empty($user_id)) {
+            $user_model = new UsersModel();
+            $user = $user_model->getUserByID($user_id);
+            if (empty($user)) {
+                $error_message = 'Пользователь не найден!';
+            }
+        } else {
+            $error_message = 'Отсутствует идентификатор записи!';
+        }
+
+        $this->render('edit', [
+            'sidebar' => UserOperations::getMenuLinks(),
+            'user' => $user,
+            'error_message' => $error_message
+        ]);
+    }
+    public function actionDelete(){
+        $this->view->title = 'Удаление пользователя';
+        $user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : null;
+$user = null;
+
+        $error_message = '';
+
+        if (!empty($user_id)) {
+            $news_model = new UsersModel();
+            $user = $news_model->getUserByID($user_id);
+            if (!empty($user)) {
+                $result_delete = $news_model->deleteById($user_id);
+                if ($result_delete['result']) {
+                    $this->redirect('/user/users');
+                } else {
+                    $error_message = $result_delete['error_message'];
+                }
+            } else {
+                $error_message = 'Пользователь не найден!';
+            }
+        } else {
+            $error_message = 'Отсутствует идентификатор записи!';
+        }
+
+        $this->render('delete', [
+            'sidebar' => UserOperations::getMenuLinks(),
+
+            'error_message' => $error_message
+        ]);
+    }
 }
 
 

@@ -1,9 +1,9 @@
 <?php
 return [
-    'provider' => 'mysql',
+    'provider' => 'pgsql',
     'hostname' => 'localhost',
     'database' => 'frame',
-    'username' => 'root',
+    'username' => 'postgres',
     'password' => ''
 ];
 

@@ -6,7 +6,7 @@ use app\core\InitController;
 use app\lib\UserOperations;
 use app\models\NewsModels;
 
-class NewsController extends InitController
+class ProductController extends InitController
 {
     public function behaviors()
     {
@@ -24,7 +24,7 @@ class NewsController extends InitController
                         'actions' => ['add', 'edit'],
                         'roles' => [UserOperations::RoleAdmin],
                         'matchCallback' => function () {
-                            $this->redirect('/news/list');
+                            $this->redirect('/product/list');
                         }
                     ],
                 ]
@@ -34,7 +34,7 @@ class NewsController extends InitController
 
     public function actionList()
     {
-        $this->view->title = 'Новости';
+        $this->view->title = 'Каталог';
 
         $news_model = new NewsModels();
         $news = $news_model->getListNews();
@@ -48,7 +48,7 @@ class NewsController extends InitController
 
     public function actionAdd()
     {
-        $this->view->title = 'Добавление новости';
+        $this->view->title = 'Добавление товара';
         $error_message = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['btn_news_add_form'])) {
@@ -57,7 +57,7 @@ class NewsController extends InitController
                 $userModel = new NewsModels();
                 $result_add = $userModel->add($news_data);
                 if ($result_add['result']) {
-                    $this->redirect('/news/list');
+                    $this->redirect('/product/list');
                 } else {
                     $error_message = $result_add['error_message'];
                 }
@@ -72,7 +72,7 @@ class NewsController extends InitController
 
     public function actionEdit()
     {
-        $this->view->title = 'Редактирование новости';
+        $this->view->title = 'Редактирование товара';
         $news_id = !empty($_GET['news_id']) ? $_GET['news_id'] : null;
         $news = null;
         $error_message = '';
@@ -84,7 +84,7 @@ class NewsController extends InitController
                 $newsModel = new NewsModels();
                 $result_edit = $newsModel->edit($news_id, $news_data);
                 if ($result_edit['result']) {
-                    $this->redirect('/news/list');
+                    $this->redirect('/product/list');
                 } else {
                     $error_message = $result_edit['error_message'];
                 }
@@ -95,7 +95,7 @@ class NewsController extends InitController
             $news_model = new NewsModels();
             $news = $news_model->getNewsById($news_id);
             if (empty($news)) {
-                $error_message = 'Новость не найдена!';
+                $error_message = 'Товар не найден!';
             }
         } else {
             $error_message = 'Отсутствует идентификатор записи!';
@@ -110,7 +110,7 @@ class NewsController extends InitController
 
     public function actionDelete()
     {
-        $this->view->title = 'Редактирование новости';
+        $this->view->title = 'Удаление товара';
         $news_id = !empty($_GET['news_id']) ? $_GET['news_id'] : null;
         $news = null;
         $error_message = '';
@@ -121,7 +121,7 @@ class NewsController extends InitController
             if (!empty($news)) {
                 $result_delete = $news_model->deleteById($news_id);
                 if ($result_delete['result']) {
-                    $this->redirect('/news/list');
+                    $this->redirect('/product/list');
                 } else {
                     $error_message = $result_delete['error_message'];
                 }

@@ -24,10 +24,10 @@ use app\lib\UserOperations;
             </div>
             <div class="cabinet_content">
                 <dib class="page-content-inner">
-                    <h2>Новости</h2>
+                    <h2>Каталог</h2>
                     <div class="news-block">
                         <div class="links_box text-end">
-                            <a href="/news/add">Добавить</a>
+                            <a href="/product/add">Добавить</a>
                         </div>
                         <?php if (!empty($news)) : ?>
                         <div class="news-list">
@@ -36,12 +36,13 @@ use app\lib\UserOperations;
                                     <h3>
                                         <?=$item['title']?><span> от <?= date('d.m.Y H:i:s',strtotime($item['date_create']))?></span>
                                         <?php if ($role === UserOperations::RoleAdmin) :?>
-                                        (<a href="/news/edit?news_id=<?=$item['id']?>">редактировать</a>
-                                            <a href="/news/delete?news_id=<?=$item['id']?>">Удалить</a>)
+                                        (<a href="/product/edit?news_id=<?=$item['id']?>">редактировать</a>
+                                            <a href="/product/delete?news_id=<?=$item['id']?>">Удалить</a>)
                                         <?php endif ?>
                                     </h3>
                                     <div class="news-short_description"><?=$item['short_description']?></div>
                                     <div class="news-description"><?=$item['description']?></div>
+                                    <div class="news-description"><?=$item['price']?></div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
