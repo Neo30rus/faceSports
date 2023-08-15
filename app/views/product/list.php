@@ -36,9 +36,10 @@ use app\lib\UserOperations;
                                     <h3>
                                         <?=$item['title']?><span> от <?= date('d.m.Y H:i:s',strtotime($item['date_create']))?></span>
                                         <?php if ($role === UserOperations::RoleAdmin) :?>
-                                        (<a href="/product/edit?news_id=<?=$item['id']?>">редактировать</a>
-                                            <a href="/product/delete?news_id=<?=$item['id']?>">Удалить</a>)
+                                        (<a href="/product/edit?product_id=<?=$item['id']?>">редактировать</a>
+                                            <a href="/product/delete?product_id=<?=$item['id']?>">Удалить</a>)
                                         <?php endif ?>
+                                        <a href="/product/addcard?product_id=<?=$item['id']?>">добавить корзину</a>
                                     </h3>
                                     <div class="news-short_description"><?=$item['short_description']?></div>
                                     <div class="news-description"><?=$item['description']?></div>
