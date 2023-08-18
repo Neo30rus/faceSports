@@ -33,7 +33,7 @@ abstract class BaseModel
             }
         }
         $query->execute();
-
+//var_dump($query->errorInfo());
         return $query;
     }
 

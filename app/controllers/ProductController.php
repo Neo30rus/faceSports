@@ -35,7 +35,7 @@ class ProductController extends InitController
     public function actionList()
     {
         $this->view->title = 'Каталог';
-var_dump($_SESSION);
+        var_dump($_SESSION);
         $news_model = new NewsModels();
         $news = $news_model->getListNews();
 
@@ -138,13 +138,14 @@ var_dump($_SESSION);
             'error_message' => $error_message
         ]);
     }
+
     public function actionAddcard()
     {
         $this->view->title = 'Добавление товара в корзину';
         $product_id = !empty($_GET['product_id']) ? $_GET['product_id'] : null;
         $error_message = '';
         if (!empty($product_id)) {
-            $_SESSION["user"]['card'][]=$product_id;
+            $_SESSION["user"]['card'][] = $product_id;
             $this->redirect('/product/list');
         } else {
             $error_message = 'Отсутствует идентификатор записи!';
@@ -155,20 +156,28 @@ var_dump($_SESSION);
 
         ]);
     }
+
     public function actionCard()
     {
         $this->view->title = 'Корзина';
         $error_message = '';
         if (!empty($_SESSION['user']['card'])) {
-            $card=$_SESSION['user']['card'];
-            $productModel=new NewsModels();
-            $this->redirect('/product/list');
+            $card = array_count_values($_SESSION['user']['card']);
+
+
+            $productModel = new NewsModels();
+            $product = $productModel->getProductsByID(implode(',', array_keys($card)));
+            for ($i = 0; $i < count($product); $i++) {
+                $product[$i]['count'] = $card[$product[$i]['id']];
+            }
+
         } else {
             $error_message = 'Корзина пуста!';
         }
-        $this->render('delete', [
+        $this->render('card', [
             'sidebar' => UserOperations::getMenuLinks(),
-            'error_message' => $error_message
+            'error_message' => $error_message,
+            'card' => $product,
 
         ]);
     }
