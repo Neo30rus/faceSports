@@ -20,7 +20,7 @@
             <div class="cabinet_content">
                 <dib class="page-content-inner">
                     <h2>Добавление товара</h2>
-                    <form method="post" name="news_add_form">
+                    <form method="post" name="news_add_form" enctype="multipart/form-data">
                         <div class="news_add_form">
                             <div class="alert alert-danger <?= !empty($error_message) ? null : 'hidden' ?>">
                                 <?= !empty($error_message) ? $error_message : null ?>
@@ -78,6 +78,14 @@
                                            : ''
                                        ?>"
                                        placeholder="Введите цену"
+                                >
+                            </div>
+                            <div class="input_box">
+                                <label for="field_price">Цена</label>
+                                <input type="file"
+                                       name="file"
+                                       id="field_price"
+                                       class="form-control"
                                 >
                             </div>
                             <div class="button_box">

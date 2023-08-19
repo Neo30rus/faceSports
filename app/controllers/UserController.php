@@ -28,7 +28,7 @@ class UserController extends InitController
                         }
                     ],
                     [
-                        'actions' => ['users'],
+                        'actions' => ['users','delete','edit'],
                         'roles' => [UserOperations::RoleAdmin],
                         'matchCallback' => function () {
                             $this->redirect('/user/profile');
@@ -151,7 +151,9 @@ class UserController extends InitController
             'role' => UserOperations::getRoleUser(),
         ]);
     }
-    public function actionEdit(){
+
+    public function actionEdit()
+    {
         $this->view->title = 'Редактирование пользователя';
         $user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : null;
         $user = null;
@@ -187,10 +189,12 @@ class UserController extends InitController
             'error_message' => $error_message
         ]);
     }
-    public function actionDelete(){
+
+    public function actionDelete()
+    {
         $this->view->title = 'Удаление пользователя';
         $user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : null;
-$user = null;
+        $user = null;
 
         $error_message = '';
 
@@ -213,7 +217,6 @@ $user = null;
 
         $this->render('delete', [
             'sidebar' => UserOperations::getMenuLinks(),
-
             'error_message' => $error_message
         ]);
     }

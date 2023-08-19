@@ -14,7 +14,7 @@ class ProductController extends InitController
             'access' => [
                 'rules' => [
                     [
-                        'actions' => ['list'],
+                        'actions' => ['list', 'addcard', 'card', 'cash', 'history', 'img'],
                         'roles' => [UserOperations::RoleUser, UserOperations::RoleAdmin],
                         'matchCallback' => function () {
                             $this->redirect('/user/login');
@@ -27,6 +27,13 @@ class ProductController extends InitController
                             $this->redirect('/product/list');
                         }
                     ],
+                    [
+                        'actions' => ['global'],
+                        'roles' => [UserOperations::RoleAdmin],
+                        'matchCallback' => function () {
+                            $this->redirect('/product/history');
+                        }
+                    ],
                 ]
             ]
         ];
@@ -35,7 +42,6 @@ class ProductController extends InitController
     public function actionList()
     {
         $this->view->title = 'Каталог';
-        var_dump($_SESSION);
         $news_model = new NewsModels();
         $news = $news_model->getListNews();
 
@@ -53,6 +59,7 @@ class ProductController extends InitController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['btn_news_add_form'])) {
             $news_data = !empty($_POST['news']) ? $_POST['news'] : null;
+            $news_data['file'] = !empty($_FILES['file']) ? $_FILES['file'] : null;
             if (!empty($news_data)) {
                 $userModel = new NewsModels();
                 $result_add = $userModel->add($news_data);
@@ -161,10 +168,9 @@ class ProductController extends InitController
     {
         $this->view->title = 'Корзина';
         $error_message = '';
+        $product = null;
         if (!empty($_SESSION['user']['card'])) {
             $card = array_count_values($_SESSION['user']['card']);
-
-
             $productModel = new NewsModels();
             $product = $productModel->getProductsByID(implode(',', array_keys($card)));
             for ($i = 0; $i < count($product); $i++) {
@@ -181,4 +187,70 @@ class ProductController extends InitController
 
         ]);
     }
+
+    public function actionCash()
+    {
+        $this->view->title = 'Оплата';
+        $error_message = '';
+        $product = null;
+        if (!empty($_SESSION['user']['card'])) {
+            $card = array_count_values($_SESSION['user']['card']);
+            $productModel = new NewsModels();
+            $product = $productModel->getProductsByID(implode(',', array_keys($card)));
+            for ($i = 0; $i < count($product); $i++) {
+                $product[$i]['count'] = $card[$product[$i]['id']];
+            }
+            $globalCount = 0;
+            $globalPrice = 0;
+            foreach ($product as $item) {
+                $globalCount += $item['count'];
+                $globalPrice += $item['price'] * $item['count'];
+            }
+            $productModel->createHistory($globalCount, $globalPrice, $_SESSION['user']['id']);
+            $_SESSION['user']['card'] = [];
+            $this->redirect('/product/card');
+        } else {
+            $error_message = 'Корзина пуста!';
+        }
+        $this->render('card', [
+            'sidebar' => UserOperations::getMenuLinks(),
+            'error_message' => $error_message,
+            'card' => $product,
+
+        ]);
+    }
+
+    public function actionGlobal()
+    {
+        $this->view->title = 'Глобальная история';
+        $news_model = new NewsModels();
+        $news = $news_model->getHistory();
+
+        $this->render('history', [
+            'sidebar' => UserOperations::getMenuLinks(),
+            'news' => $news,
+        ]);
+    }
+
+    public function actionHistory()
+    {
+        $this->view->title = 'История';
+        $news_model = new NewsModels();
+        $news = $news_model->getHistory($_SESSION['user']['id']);
+
+        $this->render('history', [
+            'sidebar' => UserOperations::getMenuLinks(),
+            'news' => $news,
+        ]);
+    }
+
+    public function actionImg()
+    {
+        $product_id = !empty($_GET['product_id']) ? $_GET['product_id'] : null;
+        $news_model = new NewsModels();
+        $news = $news_model->getNewsById($product_id);
+        header('Content-Type: image/png');
+        readfile($_SERVER['DOCUMENT_ROOT'] . $news['file_path']);
+    }
+
 }

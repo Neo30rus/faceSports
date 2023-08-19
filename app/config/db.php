@@ -2,7 +2,7 @@
 return [
     'provider' => 'pgsql',
     'hostname' => 'localhost',
-    'database' => 'frame',
+    'database' => 'framework',
     'username' => 'postgres',
     'password' => ''
 ];

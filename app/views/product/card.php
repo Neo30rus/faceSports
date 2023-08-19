@@ -1,6 +1,7 @@
 <?php
 /** @var array $sidebar - Меню */
 /** @var string $role - Список новостей */
+
 /** @var array $news - Роль пользователя */
 
 use app\lib\UserOperations;
@@ -30,19 +31,28 @@ use app\lib\UserOperations;
                             <a href="/product/add">Добавить</a>
                         </div>
                         <?php if (!empty($card)) : ?>
-                        <div class="news-list">
-                            <?php foreach ($card as $item) :?>
-                                <div class="news-item">
-                                    <h3>
-                                        <?=$item['title']?><span> от <?= date('d.m.Y H:i:s',strtotime($item['date_create']))?></span>
-                                    </h3>
-                                    <div class="news-short_description"><?=$item['short_description']?></div>
-                                    <div class="news-description"><?=$item['description']?></div>
-                                    <div class="news-description"><?=$item['price']?></div>
-                                    <div class="news-description"><?=$item['count']?></div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                            <div class="news-list">
+                                <?php foreach ($card as $item) : ?>
+                                    <div class="news-item">
+                                        <h3>
+                                            <?= $item['title'] ?>
+                                            <span> от <?= date('d.m.Y H:i:s', strtotime($item['date_create'])) ?></span>
+                                        </h3>
+                                        <div class="news-short_description"><?= $item['short_description'] ?></div>
+                                        <div class="news-description"><?= $item['description'] ?></div>
+                                        <div class="news-description"><?= $item['price'] ?></div>
+                                        <div class="news-description"><?= $item['count'] ?></div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="button_box">
+                                <a
+                                        href="/product/cash"
+                                        id="btnNewsAddForm"
+                                        class="btn btn-primary"
+                                >Оплатить
+                                </a>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </dib>
